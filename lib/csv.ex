@@ -22,7 +22,30 @@ defmodule Csv do
   """
 
   @spec parse(binary()) :: {:ok, [map()]} | {:error, String.t()}
-  def parse(_file) do
-    raise "Not implemented"
+  def parse(file) do
+    case File.read(file) do
+      {:ok, conteudo} -> analise_conteudo(conteudo)
+      {:error, _} -> {:error, "File not found"}
+    end
+  end
+
+  defp analise_conteudo(conteudo) do
+    case String.split(conteudo, "\n") do
+      [linha_cabecalho | linha_dado] -> analise_dados(linha_cabecalho, linha_dado)
+      [] -> {:error, "File is empty"}
+    end
+  end
+
+  defp analise_dados(linha_cabecalho, linha_dado) do
+    cabecalho = String.split(linha_cabecalho, ",")
+    valores_tabela = Enum.map(linha_dado, fn linha -> dados = String.split(linha, ",")
+        if length(dados) != length(cabecalho) do
+          {:error, "Invalid CSV"}
+        else
+          Enum.zip(cabecalho, dados) |> Map.new()
+        end
+      end)
+
+    {:ok, valores_tabela}
   end
 end
