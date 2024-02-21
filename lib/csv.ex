@@ -24,16 +24,19 @@ defmodule Csv do
   @spec parse(binary()) :: {:ok, [map()]} | {:error, String.t()}
   def parse(file) do
     case File.read(file) do
-      {:ok, conteudo} -> analise_conteudo(conteudo)
+      {:ok, conteudo} ->
+        if byte_size(conteudo) == 0 do
+          {:error, "File is empty"}
+          else
+            analise_conteudo(conteudo)
+          end
       {:error, _} -> {:error, "File not found"}
     end
   end
 
   defp analise_conteudo(conteudo) do
-    case String.split(conteudo, "\n") do
-      [linha_cabecalho | linha_dado] -> analise_dados(linha_cabecalho, linha_dado)
-      [] -> {:error, "File is empty"}
-    end
+      [linha_cabecalho | linha_dado] = String.split(conteudo, "\n")
+      analise_dados(linha_cabecalho, linha_dado)
   end
 
   defp analise_dados(linha_cabecalho, linha_dado) do
@@ -49,3 +52,4 @@ defmodule Csv do
     {:ok, valores_tabela}
   end
 end
+
