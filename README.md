@@ -1,3 +1,7 @@
+# Notion explicativo do programa
+
+https://zigzag-periodical-1d3.notion.site/Case-para-a-entrevista-be6903fcace54a4ba0bd00cb03bb3e00?pvs=4
+
 # Csv - Case para Entrevista
 
 Veja o arquivo `lib/csv.ex` para ler os requerimentos do desafio.
